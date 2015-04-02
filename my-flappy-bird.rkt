@@ -1,28 +1,13 @@
-#lang at-exp racket
+#lang racket
 
-(require (except-in 2htdp/universe space))
-(require 2htdp/image)
-(require 2htdp/planetcute)
-(require (only-in pict pict->bitmap) pict/face)
-
-(require (only-in math/base random-integer))
-
-(define-syntax set+!
-  (syntax-rules (+= -= *= /= ++)
-    [(set+! var amt)    (set! var (+ var amt))]
-    [(set+! var += amt) (set! var (+ var amt))]
-    [(set+! var -= amt) (set! var (- var amt))]
-    [(set+! var *= amt) (set! var (* var amt))]
-    [(set+! var /= amt) (set! var (/ var amt))]
-    [(set+! var ++) (add1! var)]
-    [(set+! var --) (sub1! var)]
-    ))
-
-(define-syntax-rule (add1! var)
-  (set! var (add1 var)))
-
-(define-syntax-rule (sub1! var)
-  (set! var (sub1 var)))
+(require (except-in 2htdp/universe space)
+         2htdp/image
+         2htdp/planetcute
+         (only-in pict pict->bitmap)
+         pict/face
+         math/base
+         sweet-exp-utils/def
+         )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -108,7 +93,7 @@
             [else (send flappy-bird fly!)]))
     
     (define (inc-score!)
-      (add1! score) )
+      (set! score += 1))
     
     (define (collision?)
       (let* ([flappy-bird.x (send flappy-bird get-x)]
@@ -127,13 +112,13 @@
                           (+ pipe.y (* 1/2 space.height) (* -1/3 flappy-bird.height)))))))))
     
     (define (game-over!)
-      (set! game-over? #t))
+      (set! game-over? = #t))
     
     (define (reset!)
-      (set! flappy-bird (new flappy-bird%))
-      (set! pipes '())
-      (set! score 0)
-      (set! game-over? #f))
+      (set! flappy-bird = (new flappy-bird%))
+      (set! pipes = '())
+      (set! score = 0)
+      (set! game-over? = #f))
     
     (define (draw)
       (overlay/align
@@ -177,11 +162,11 @@
             (remove-last-pipe!)))))
     
     (define (add-new-pipe!)
-      (set! pipes (cons (new pipe%) pipes))
+      (set! pipes = (cons (new pipe%) pipes))
       (maybe-remove-last-pipe!))
     
     (define (remove-last-pipe!)
-      (set! pipes (drop-right pipes 1)))
+      (set! pipes = (drop-right pipes 1)))
     ))
 (define world? (is-a?/c world%))
 
@@ -199,13 +184,13 @@
     (define (fly!)
       (when (above-ground?)
         (local [(define ∆t 1)]
-          (set+! v += (* g ∆t))
-          (set+! y += (* v ∆t)))))
+          (set! v += (* g ∆t))
+          (set! y += (* v ∆t)))))
     
     (define (flap!)
       (local [(define ∆t 1)]
-        (set! v v-flap)
-        (set+! y += (* v ∆t))))
+        (set! v = v-flap)
+        (set! y += (* v ∆t))))
     
     (define (above-ground?)
       (let* ([img.height (image-height img)]
@@ -236,7 +221,7 @@
       (local [(define ∆t 1)]
         (when (and (< (+ scene.ctr-x (* speed ∆t)) x) (<= x scene.ctr-x))
           (send world inc-score!))
-        (set+! x += speed)))
+        (set! x += speed)))
     
     (define (draw)
       (place-image img
