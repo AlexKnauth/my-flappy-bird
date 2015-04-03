@@ -62,6 +62,9 @@ def scene =
     sky
     grass
 
+def much-grass =
+  apply beside make-list(4 grass)
+
 def space =
   rectangle(pipe.width space.height 0 transparent)
 
@@ -137,7 +140,7 @@ def world% =
           else
             def first-pipe = first(pipes)
             send* first-pipe get-x()
-      place-image/align(beside(grass grass grass grass)
+      place-image/align(much-grass
                         grass.x scene.height
                         "middle" "bottom"
                         sky)
