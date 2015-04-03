@@ -6,5 +6,7 @@
                "htdp-lib"
                "pict-lib"
                "math-lib"
-               "at-exp-lib"
+               "sweet-exp"
+               "my-cond"
+               "git://github.com/AlexKnauth/sweet-exp-utils"
                ))
